@@ -18,7 +18,9 @@ def get_best(open_list):
 
 
 def is_valid_location(x, y, grid):
-    return 0 <= y < len(grid) and 0 <= x < len(grid[y]) and not grid[x, y] == "@"
+    if 0 <= y < grid.shape[0] and 0 <= x < grid.shape[1] and not grid[x, y] == "@":
+        return True
+    return False
 
 
 def try_appeand_location(x, y, grid, s_location, neighbors):
@@ -47,34 +49,13 @@ def distance_to_root(s):
 # The function returns whether n_location should be generated (checks in open_list)
 # removes a node from open_list if needed 
 def check_for_duplicates_open(n_location, s, open_list):
-    bool_flag = False
-    new = queue.Queue()
-    while not open_list.empty():
-        x = open_list.get()
-        if is_goal(x, n_location):
-            bool_flag = True
-            if distance_to_root(x[2]) > distance_to_root(s):
-                bool_flag = True
-                break
-            new.put(x)
-            break
-        new.put(x)
-    while not new.empty():
-        open_list.put(new.get())
-    # if bool_flag:
-    #     insert_to_open(open_list, s)
-    return bool_flag
+    return (n_location[0], n_location[1], s) in open_list.queue
 
 
 # The function returns whether n_location should be generated (checks in closed_list)
 # removes a node from closed_list if needed  
 def check_for_duplicates_close(n_location, s, closed_list):
-    return n_location in closed_list
-    # for x in closed_list.keys():
-    #     if is_goal(x, n_location):
-    #         if distance_to_root(x[2]) > distance_to_root(s):
-    #             return False
-    # return True
+    return (n_location[0], n_location[1], s) in closed_list
 
 
 # The function returns whether or not s_location is the goal location
